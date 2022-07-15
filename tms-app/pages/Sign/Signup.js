@@ -27,9 +27,21 @@ function Copyright(props) {
   );
 }
 
+const isLoggedIn = async (event) => {
+  const router = useRouter()
+  
+  const res = await fetch(`http://localhost:3000/api/authentication/authed`)
+  const user = await res.json()
+  if ((user == 403) || (user == 401)) {}
+  else {router.push('/app/home')}
+}
+
 const theme = createTheme();
 
 export default function Signup() {
+  const router = useRouter()
+  isLoggedIn()
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);

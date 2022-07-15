@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useState,useEffect} from 'react'
+import { useRouter } from 'next/router';
+import { getCookie, setCookie } from 'cookies-next';
 
 function Copyright(props) {
   return (
@@ -30,8 +32,18 @@ function Copyright(props) {
 
 const theme = createTheme();
 
+const isLoggedIn = async () => {
+  const router = useRouter()
+  const res = await fetch(`http://localhost:3000/api/authentication/authed`)
+    const user = await res.json()
+    if ((user == 403) || (user == 401)) {}
+    else{router.push('/app/home')}
+}
 
 export default function Login() {
+  const router = useRouter()
+  isLoggedIn()
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -46,8 +58,13 @@ export default function Login() {
     }
     const res = await fetch(`http://localhost:3000/api/authentication/auth`,config)
     const login = await res.json()
-    if (login==200){console.log('ok')}
-    if (login==401){console.log('not ok')}
+    if (login==200){
+      console.log('Valid credentials!')
+      router.push('/app/home')
+    }
+    if (login==401){
+      console.log('Invalid credentials!')
+    }
   };
 
   return (

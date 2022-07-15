@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 
 export default async (req, res) =>{
     if (req.method=="GET"){
-        res.status(405).json('invalid request!')
+        res.status(405).json('invalid request method!')
 
     }
     const login=JSON.parse(req.body)
