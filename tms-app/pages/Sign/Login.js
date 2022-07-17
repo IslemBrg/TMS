@@ -44,11 +44,26 @@ export default function Login() {
   const router = useRouter()
   isLoggedIn()
 
+  const [EmptyMatInput, setEmptyMatInput] = useState(false)
+  const [EmptyPassInput, setEmptyPassInput] = useState(false)
+  const [InvalidCredentials, setInvalidCredentials] = useState(false)
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const mat = data.get('matricul')
     const pass = data.get('pass')
+    setEmptyMatInput(false)
+    setEmptyPassInput(false)
+    setInvalidCredentials(false)
+    if(mat == ""){
+      setEmptyMatInput(true)
+      return;
+    }
+    if(pass == ""){
+      setEmptyPassInput(true)
+      return;
+    }
     const config={
       method:"POST",
       body:JSON.stringify({
@@ -63,7 +78,7 @@ export default function Login() {
       router.push('/app/home')
     }
     if (login==401){
-      console.log('Invalid credentials!')
+      console.log(setInvalidCredentials(true))
     }
   };
 
@@ -106,6 +121,21 @@ export default function Login() {
               id="pass"
               autoComplete="Mot de passe"
             />
+            {EmptyMatInput && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Veuillez saisir votre numéro d'immatriculation!</p>
+              </div>
+            }
+            {EmptyPassInput && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Veuillez saisir votre mot de passe!</p>
+              </div>
+            }
+            {InvalidCredentials && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Numéro d'immatriculation ou mot de passe n'est pas correct!</p>
+              </div>
+            }
             <Button
               type="submit"
               fullWidth

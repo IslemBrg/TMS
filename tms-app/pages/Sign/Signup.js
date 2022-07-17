@@ -12,6 +12,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useRouter } from 'next/router';
+import {useEffect, useState} from 'react'
+import { set } from 'nprogress';
 
 
 function Copyright(props) {
@@ -44,13 +46,47 @@ export default function Signup() {
   const router = useRouter()
   isLoggedIn()
 
-  const handleSubmit = (event) => {
+  const [PasswordNotMatching, setPasswordNotMatching] = useState(false)
+  const [EmptyMatInput, setEmptyMatInput] = useState(false)
+  const [EmptyPassInput, setEmptyPassInput] = useState(false)
+  const [UserExist, setUserExist] = useState(false)
+  const [MatNotExisting, setMatNotExisting] = useState(false)
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      Mat: data.get('matricul'),
-      pass: data.get('pass'),
-    });
+    setPasswordNotMatching(false)
+    setEmptyMatInput(false)
+    setEmptyPassInput(false)
+    setUserExist(false)
+    setMatNotExisting(false)
+    const mat = data.get('matricul')
+    const pass = data.get('pass')
+    const pass2 = data.get('pass2')
+    if(mat == ""){
+      setEmptyMatInput(true)
+      return;
+    }
+    if(pass == ""){
+      setEmptyPassInput(true)
+      return;
+    }
+    if (pass != pass2){
+      setPasswordNotMatching(true)
+      return;
+    }
+    const config={
+      method:"POST",
+      body:JSON.stringify({
+        mat:mat,
+        pass:pass
+      })
+    }
+    const res = await fetch(`http://localhost:3000/api/authentication/signup`,config)
+    const signup = await res.json()
+    if (signup == 406){setUserExist(true)}
+    if (signup == 404){setMatNotExisting(true)}
+    if (signup == 200){router.push('/Sign/Login')}
   };
 
   return (
@@ -102,6 +138,31 @@ export default function Signup() {
               id="pass2"
               autoComplete="Mot de passe"
             />
+            {PasswordNotMatching && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Les mots de passe ne correspondent pas!</p>
+              </div>
+            }
+            {EmptyMatInput && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Veuillez saisir votre numéro d'immatriculation!</p>
+              </div>
+            }
+            {EmptyPassInput && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Veuillez saisir une mot de passe!</p>
+              </div>
+            }
+            {UserExist && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Vous êtes déjà inscrit!</p>
+              </div>
+            }
+            {MatNotExisting && 
+              <div className='errorMessage'>
+                <p style={{padding:'1px',textAlign:'center'}}>Numéro d'immatriculation n'éxiste pas!</p>
+              </div>
+            }
             <Button
               type="submit"
               fullWidth

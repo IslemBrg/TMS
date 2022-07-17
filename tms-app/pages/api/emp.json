@@ -1,0 +1,38 @@
+[
+    {
+        "matricul": "1426",
+        "service": "administration",
+        "FirstName": "Mounir",
+        "LastName": "Bargaoui"
+    },
+    {
+        "matricul": "6658",
+        "service": "administration",
+        "FirstName": "Mohammed",
+        "LastName": "Chrif"
+    },
+    {
+        "matricul": "1111",
+        "service": "administration",
+        "FirstName": "Mokhtar",
+        "LastName": "Mbarki"
+    },
+    {
+        "matricul": "4444",
+        "service": "administration",
+        "FirstName": "Mohsen",
+        "LastName": "Ben Masoud"
+    },
+    {
+        "matricul": "8888",
+        "service": "administration",
+        "FirstName": "Mehrez",
+        "LastName": "Bou Galb"
+    },
+    {
+        "matricul": "9999",
+        "service": "controlleur",
+        "FirstName": "Hamadi",
+        "LastName": "EL Askri"
+    }
+]
